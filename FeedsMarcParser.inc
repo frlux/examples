@@ -6,7 +6,7 @@
  */
 
 /**
- * Parses a given file as a CSV file.
+ * Parses a given file as a MARC file.
  */
 class FeedsMarcParser extends FeedsParser {
    /**
