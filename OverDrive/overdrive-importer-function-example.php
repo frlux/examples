@@ -174,3 +174,53 @@ function fbkMergeRecords($metaRecords, $products){
 
   return $array;
  }
+
+ 
+/**
+ * Provides a serialized array of keywords for overdrive items.
+ * 
+ * @param   string    $subjects     a comma separated string of subject keywords
+ * @param   string    $interest     a comma separated string of interest level indicators
+ * @param   string    $keywords     a comma separated string of item keywords
+ * @param   string    $lang         a comma separated string of language indicators
+ * @param   string    $grade        a comma separated string of grade levels
+ * @param   string    $atos         the ATOS score 
+ * @param   string    $lexile       the LEXILE score
+ * 
+ * @return  string    serialized array of keywords to aid in matching genres and audiences, tagging for topics
+ */
+function fbkOdTermKeyArray($subjects = null, $interest = null, $keywords = null, $grade = null, $atos =null, $lexile=null) {
+  $termArray = array(
+    'genres'        => array(),
+    'audience'      => explode(",", $interest),
+    'topics'        => explode(",", $keywords),
+    'genres_other'  => explode(",",$subjects), 
+    'audience_other'=> explode(",", $grade)
+  );
+
+  //$audiences = fbkCleanArrayToCompare(explode(",", $grade));
+  if($interest){
+    $interests = explode(",", $interest);
+    foreach($interests as $level){
+      $termArray['audience_other'][] = "Interest Level: " . $level;
+    }
+  }
+  if($lexile){
+    $termArray['audience_other'][] = $lexile . "L Lexile ";
+  }
+  if($atos){
+    $termArray['audience_other'][] = "ATOS: " . $atos;
+  }
+  
+  foreach($termArray as $key => &$array) {
+    //$array = fbkCleanArrayToCompare($array);
+    foreach($array as $k => &$v){
+      $v = trim($v, " \t\n\r\0\x0B-.,;:\/\\");
+    }
+    $array = array_map('strtolower', $array);
+    $array = array_values(array_unique($array));
+  }    
+
+  $termArray = array_map('array_filter', $termArray);
+  return serialize($termArray);
+}
