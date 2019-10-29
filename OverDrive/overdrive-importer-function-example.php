@@ -179,6 +179,8 @@ function fbkMergeRecords($metaRecords, $products){
 /**
  * Provides a serialized array of keywords for overdrive items.
  * 
+ * Includes keys from record: subjects, interestLevel, gradeLevels, ATOS, lexileScore
+ * 
  * @param   string    $subjects     a comma separated string of subject keywords
  * @param   string    $interest     a comma separated string of interest level indicators
  * @param   string    $keywords     a comma separated string of item keywords
